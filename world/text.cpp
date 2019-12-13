@@ -44,7 +44,7 @@ void Text::freeCharacters() {
 
 void Text::show(bool value) {
     for (auto &character : characters) {
-        character->show(value);
+        character->isVisible = value;
     }
 }
 

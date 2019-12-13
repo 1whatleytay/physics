@@ -16,7 +16,10 @@ float Body::calculateFriction() {
 }
 
 Force Body::getArrowForce() {
-    return { arrow->width * arrowStrength, arrow->height * arrowStrength };
+    float lengthX, lengthY;
+    arrow->getArrowSize(lengthX, lengthY);
+
+    return { lengthX * arrowStrength, lengthY * arrowStrength };
 }
 
 void Body::applyForce(Force force) {
@@ -133,16 +136,17 @@ void Body::click(enum Button button, enum Action action) {
                 selected = true;
 
                 arrow->moveTo(clickX, clickY);
-                arrow->show(true);
+                arrow->isVisible = true;
                 text->show(true);
             }
         }
 
         if (action == Action::Released && selected) {
             selected = false;
+            shotsTaken++;
 
             applyForce(getArrowForce());
-            arrow->show(false);
+            arrow->isVisible = false;
             text->show(false);
         }
     }
@@ -155,13 +159,17 @@ void Body::update() {
         doMovement();
     }
 
+//    originX = x + width / 2;
+//    originY = y + height / 2;
+//    rotation += 0.001;
+
     save();
 }
 
 Body::Body(const Arguments &arguments, Physics &physics, float mass, float friction)
     : Thing(arguments), physics(physics), mass(mass), friction(friction) {
     arrow = new Arrow(engine, x + width / 2, y + height / 2);
-    arrow->show(false);
+    arrow->isVisible = false;
 
     text = new Text(engine, x + width / 2, y + height / 2);
     text->fontSize = 2;

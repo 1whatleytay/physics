@@ -16,8 +16,8 @@ class Texture;
 
 class Engine {
     static constexpr uint32_t maxThings = 500;
-    static constexpr uint32_t textureWidth = 1000;
-    static constexpr uint32_t textureHeight = 1000;
+    static constexpr uint32_t textureWidth = 500;
+    static constexpr uint32_t textureHeight = 500;
 
     GLFWwindow *window = nullptr;
 
@@ -35,7 +35,7 @@ class Engine {
     std::vector<std::unique_ptr<Thing>> things;
     std::array<bool, maxThings> thingAllocations = { };
     std::array<bool, textureWidth * textureHeight> textureAllocations = { };
-    std::vector<uint32_t> drawOrder;
+    std::vector<Thing *> drawOrder;
 
     std::vector<Thing *> deletableThings;
 

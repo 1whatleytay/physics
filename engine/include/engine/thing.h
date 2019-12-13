@@ -24,12 +24,11 @@ public:
 };
 
 class Thing {
-    static constexpr uint32_t vertexSize = 4 * sizeof(float);
+    static constexpr uint32_t vertexSize = 10 * sizeof(float);
     static constexpr uint32_t objectSize = 6 * vertexSize;
 
     uint32_t index;
 
-    bool isMatchingIndex(uint32_t value);
     std::vector<float> createData();
 
     friend class Engine;
@@ -40,7 +39,7 @@ protected:
     void save();
 
     virtual void key(Key key, Action action);
-    virtual void mouse(float x, float y);
+    virtual void mouse(float pX, float pY);
     virtual void click(Button button, Action action);
 
     virtual void update();
@@ -54,7 +53,11 @@ public:
 
     Texture texture;
 
-    void show(bool value);
+    bool isVisible = true;
+    float tintR = 1, tintG = 1, tintB = 1;
+    float originX = 0, originY = 0;
+    float rotation = 0;
+
     void remove();
     void setPosition(const Position &position);
 

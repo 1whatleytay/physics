@@ -3,9 +3,11 @@
 layout (location=0) out vec4 outColor;
 
 in vec2 texCoordFrag;
+in vec3 tintFrag;
 
 uniform sampler2D tex;
 
 void main() {
-    outColor = texture(tex, texCoordFrag);
+    vec4 tex = texture(tex, texCoordFrag);
+    outColor = vec4(tintFrag * tex.xyz, tex.w);
 }

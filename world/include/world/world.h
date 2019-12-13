@@ -7,11 +7,14 @@
 #include <world/arrow.h>
 #include <world/solid.h>
 #include <world/physics.h>
+#include <world/goal.h>
 
 class World : public Engine {
     Physics physics;
 
     Body *mainBody = nullptr;
+    Text *tooltip = nullptr;
+    Goal *goal = nullptr;
 
 protected:
     void key(Key code, Action action) override;

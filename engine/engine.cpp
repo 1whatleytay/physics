@@ -73,12 +73,13 @@ uint32_t Engine::registerThing(Thing *thing) {
     for (size_t a = 0; a < maxThings; a++) {
         if (!thingAllocations[a]) {
             index = a;
+            break;
         }
     }
     assert(index < maxThings);
     thingAllocations[index] = true;
     things.push_back(std::unique_ptr<Thing>(thing));
-    drawOrder.push_back(index);
+    drawOrder.push_back(thing);
     return index;
 }
 
@@ -96,7 +97,7 @@ void Engine::removeThing(Thing *thing) {
     thingAllocations[thing->index] = false;
 
     for (size_t a = 0; a < drawOrder.size(); a++) {
-        if (thing->isMatchingIndex(drawOrder[a])) {
+        if (thing == drawOrder[a]) {
             drawOrder.erase(drawOrder.begin() + a);
         }
     }
@@ -202,10 +203,16 @@ bool Engine::init() {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    glVertexAttribPointer(0, 2, GL_FLOAT, false, Thing::vertexSize, (void *)(0));
-    glVertexAttribPointer(1, 2, GL_FLOAT, false, Thing::vertexSize, (void *)(2 * sizeof(float)));
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, Thing::vertexSize, (void *)(0)); // position
+    glVertexAttribPointer(1, 2, GL_FLOAT, false, Thing::vertexSize, (void *)(2 * sizeof(float))); // texCoord
+    glVertexAttribPointer(2, 3, GL_FLOAT, false, Thing::vertexSize, (void *)(4 * sizeof(float))); // tint
+    glVertexAttribPointer(3, 2, GL_FLOAT, false, Thing::vertexSize, (void *)(7 * sizeof(float))); // origin
+    glVertexAttribPointer(4, 1, GL_FLOAT, false, Thing::vertexSize, (void *)(9 * sizeof(float))); // rotation
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -239,9 +246,11 @@ void Engine::loop() {
 
         glUniform2f(uniOffset, offsetX, offsetY);
 
-        for (uint32_t index : drawOrder) {
-            if (index < maxThings) {
-                glDrawArrays(GL_TRIANGLES, index * 6, 6);
+        for (Thing *thing : drawOrder) {
+            if (thing->isVisible) {
+                glDrawArrays(GL_TRIANGLES, thing->index * 6, 6);
+            } else {
+
             }
         }
 

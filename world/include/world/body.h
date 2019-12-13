@@ -39,6 +39,7 @@ class Body : public Thing {
     void doMovement();
 public:
     bool paused = false;
+    uint32_t shotsTaken = 0;
 
     void applyForce(Force force);
     void setMass(float newMass);
